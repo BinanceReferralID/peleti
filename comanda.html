@@ -21,6 +21,8 @@
     <link href="lib/fontawesome-free-5.15.4-web/css/all.css" rel="stylesheet">
     <link href="lib/icons-1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
+    <script type="text/javascript" src="https://cdn.emailjs.com/sdk/2.3.2/email.min.js"></script>
+    
 
     <!-- Libraries Stylesheet -->
     <link href="lib/animate/animate.min.css" rel="stylesheet">
@@ -197,25 +199,27 @@
 </div>
 
 
-
 <script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function() {
-        emailjs.init("service_peleticraiova"); // Replace 'your-emailjs-userid' with your actual EmailJS user ID
+document.addEventListener('DOMContentLoaded', function() {
+    emailjs.init("9hUehka9AZZpub8Yl"); // Replace 'your-user-id' with your actual EmailJS User ID
 
-        document.getElementById('orderForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            emailjs.sendForm('service_peleticraiova', 'template_u6kgu09', this)
-                .then(function() {
-                    console.log('SUCCESS!');
-                    alert('Comanda a fost trimisă cu succes!');
-                    document.getElementById('orderForm').reset();
-                }, function(error) {
-                    console.log('FAILED...', error);
-                    alert('Eroare la trimiterea comenzii: ' + error.text);
-                });
+    document.getElementById('orderForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        emailjs.sendForm('service_peleticraiova', 'template_u6kgu09', this)
+        .then(function(response) {
+            console.log('SUCCESS!', response.status, response.text);
+            alert('Comanda a fost trimisă cu succes!');
+            document.getElementById('orderForm').reset();
+        }, function(error) {
+            console.error('FAILED...', error);
+            alert('Eroare la trimiterea comenzii: ' + error.text);
         });
     });
+});
 </script>
+
+
 
 
 <!-- Projects End -->
