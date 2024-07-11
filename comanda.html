@@ -88,8 +88,8 @@
             <a href="despre.html" class="nav-item nav-link">Despre</a>
             <a href="servicii.html" class="nav-item nav-link">Servicii</a>
             <a href="produse.html" class="nav-item nav-link">Produse</a>
-            <a href="contact.html" class="nav-item nav-link active"></i>Contact</a>
-            <a href="comanda.html" class="nav-item nav-link "><i class="fa fa-shopping-cart me-1"></i>Comanda</a>
+            <a href="contact.html" class="nav-item nav-link "></i>Contact</a>
+            <a href="comanda.html" class="nav-item nav-link active "><i class="fa fa-shopping-cart me-1"></i>Comanda</a>
         </div>
         <a href="tel:0784715181" class="btn btn-primary py-4  px-lg-5 d-none d-lg-block">0784715181<i class="fa fa-phone-alt  ms-3"></i></a>
     </div>
@@ -134,6 +134,88 @@
     </div>
 </div>
 <!-- Carousel End -->
+
+<!-- Comanda -->
+<div class="container mt-5">
+    <h2 class="mb-4">Plasați Comanda</h2>
+    <form id="orderForm">
+        <div class="mb-3">
+            <label for="full_name" class="form-label">Nume complet</label>
+            <input type="text" class="form-control" id="full_name" name="full_name" required autocomplete="name">
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" required autocomplete="email">
+        </div>
+        <div class="mb-3">
+            <label for="phone" class="form-label">Telefon</label>
+            <input type="tel" class="form-control" id="phone" name="phone" required autocomplete="tel">
+        </div>
+        <div class="mb-3">
+            <label for="street_address" class="form-label">Strada</label>
+            <input type="text" class="form-control" id="street_address" name="street_address" required autocomplete="street-address">
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <label for="house_number" class="form-label">Număr</label>
+                <input type="text" class="form-control" id="house_number" name="house_number" required autocomplete="off">
+            </div>
+            <div class="col-sm-4">
+                <label for="block_number" class="form-label">Bloc</label>
+                <input type="text" class="form-control" id="block_number" name="block_number" autocomplete="off">
+            </div>
+            <div class="col-sm-4">
+                <label for="apartment_number" class="form-label">Apartament</label>
+                <input type="text" class="form-control" id="apartment_number" name="apartment_number" autocomplete="off">
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="county" class="form-label">Județ</label>
+            <input type="text" class="form-control" id="county" name="county" required autocomplete="address-level1">
+        </div>
+        <div class="mb-3">
+            <label for="delivery" class="form-label">Modalitate de livrare</label>
+            <select class="form-select" id="delivery" name="delivery" autocomplete="shipping">
+                <option value="Cash">Cash la livrare</option>
+                <option value="Card" disabled>Plată cu cardul (Indisponibil)</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="quantity" class="form-label">Numărul de saci</label>
+            <input type="number" class="form-control" id="quantity" name="quantity" min="1" value="1" required>
+        </div>
+        <div class="mb-3">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="terms" name="terms" required>
+                <label class="form-check-label" for="terms">
+                    Am citit și accept Termenii și Condițiile
+                </label>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Trimite Comanda</button>
+    </form>
+</div>
+
+
+
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        emailjs.init("service_peleticraiova"); // Replace 'your-emailjs-userid' with your actual EmailJS user ID
+
+        document.getElementById('orderForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            emailjs.sendForm('your_email_service_id', 'your_email_template_id', this)
+                .then(function() {
+                    console.log('SUCCESS!');
+                    alert('Comanda a fost trimisă cu succes!');
+                    document.getElementById('orderForm').reset();
+                }, function(error) {
+                    console.log('FAILED...', error);
+                    alert('Eroare la trimiterea comenzii: ' + error.text);
+                });
+        });
+    });
+</script>
 
 
 <!-- Projects End -->
@@ -212,7 +294,7 @@
             <div class="col-lg-3 col-md-6">
                 <h4 class="text-light mb-4">Servicii</h4>
                 <a class="btn btn-link" href="">Peleti</a>
-                <a class="btn btn-link" href="">Peleti Rasinoase</a>
+                <a class="btn btn-link" href="">Peleti Paie</a>
                 <a class="btn btn-link" href="">Peleti Lemn A1</a>
                 <a class="btn btn-link" href="">Livrare Peleti la Domiciliu</a>
             </div>
