@@ -22,7 +22,6 @@
     <link href="lib/icons-1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
     <script type="text/javascript" src="https://cdn.emailjs.com/sdk/2.3.2/email.min.js"></script>
-    
 
     <!-- Libraries Stylesheet -->
     <link href="lib/animate/animate.min.css" rel="stylesheet">
@@ -142,34 +141,20 @@
     <h2 class="mb-4">Plasați Comanda</h2>
     <form id="orderForm">
         <div class="mb-3">
-            <label for="full_name" class="form-label">Nume complet</label>
-            <input type="text" class="form-control" id="full_name" name="full_name" required autocomplete="name">
+            <label for="from_name" class="form-label">Nume complet</label>
+            <input type="text" class="form-control" id="from_name" name="from_name" required autocomplete="name">
         </div>
         <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email" name="email" required autocomplete="email">
+            <label for="from_email" class="form-label">Email</label>
+            <input type="from_email" class="form-control" id="from_email" name="from_email" required autocomplete="from_email">
         </div>
         <div class="mb-3">
-            <label for="phone" class="form-label">Telefon</label>
-            <input type="tel" class="form-control" id="phone" name="phone" required autocomplete="tel">
+            <label for="from_phone" class="form-label">Telefon</label>
+            <input type="tel" class="form-control" id="from_phone" name="from_phone" required autocomplete="tel">
         </div>
         <div class="mb-3">
-            <label for="street_address" class="form-label">Strada</label>
-            <input type="text" class="form-control" id="street_address" name="street_address" required autocomplete="street-address">
-        </div>
-        <div class="row">
-            <div class="col-sm-4">
-                <label for="house_number" class="form-label">Număr</label>
-                <input type="text" class="form-control" id="house_number" name="house_number" required autocomplete="off">
-            </div>
-            <div class="col-sm-4">
-                <label for="block_number" class="form-label">Bloc</label>
-                <input type="text" class="form-control" id="block_number" name="block_number" autocomplete="off">
-            </div>
-            <div class="col-sm-4">
-                <label for="apartment_number" class="form-label">Apartament</label>
-                <input type="text" class="form-control" id="apartment_number" name="apartment_number" autocomplete="off">
-            </div>
+            <label for="street_address" class="form-label">Adresă</label>
+            <input type="text" class="form-control" id="from_address" name="from_address" required autocomplete="from_address">
         </div>
         <div class="mb-3">
             <label for="county" class="form-label">Județ</label>
@@ -177,7 +162,7 @@
         </div>
         <div class="mb-3">
             <label for="delivery" class="form-label">Modalitate de livrare</label>
-            <select class="form-select" id="delivery" name="delivery" autocomplete="shipping">
+            <select class="form-select" id="delivery_method" name="delivery_method" autocomplete="shipping">
                 <option value="Cash">Cash la livrare</option>
                 <option value="Card" disabled>Plată cu cardul (Indisponibil)</option>
             </select>
@@ -200,25 +185,25 @@
 
 
 <script type="text/javascript">
-document.addEventListener('DOMContentLoaded', function() {
-    emailjs.init("9hUehka9AZZpub8Yl"); // Replace 'your-user-id' with your actual EmailJS User ID
+    document.addEventListener('DOMContentLoaded', function() {
+        emailjs.init("9hUehka9AZZpub8Yl"); // Replace this with your actual EmailJS user ID if incorrect.
 
-    document.getElementById('orderForm').addEventListener('submit', function(event) {
-        event.preventDefault();
+        document.getElementById('orderForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // This will prevent the default form submission which causes the page refresh.
 
-        emailjs.sendForm('service_peleticraiova', 'template_u6kgu09', this)
-        .then(function(response) {
-            console.log('SUCCESS!', response.status, response.text);
-            alert('Comanda a fost trimisă cu succes!');
-            document.getElementById('orderForm').reset();
-        }, function(error) {
-            console.error('FAILED...', error);
-            alert('Eroare la trimiterea comenzii: ' + error.text);
+            // Using your specific service ID and template ID here.
+            emailjs.sendForm('service_peleticraiova', 'template_u6kgu09', this)
+            .then(function(response) {
+                console.log('SUCCESS!', response.status, response.text);
+                alert('Comanda a fost trimisă cu succes!');
+                document.getElementById('orderForm').reset(); // Optional: Reset the form after submission.
+            }, function(error) {
+                console.error('FAILED...', error);
+                alert('Eroare la trimiterea comenzii: ' + error.text);
+            });
         });
     });
-});
 </script>
-
 
 
 
