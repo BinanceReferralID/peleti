@@ -186,29 +186,50 @@
 
 <!-- calculate total price dynamically -->
 <script>
-(function(){
-  const url='https://api.npoint.io/aa3ef5f1c41783fbce99';
-  const DEFAULT=27;
-  const totalEl=document.getElementById('total_price');
-  const qtyEl=document.getElementById('quantity');
-  let price=+localStorage.getItem('priceRON')||DEFAULT;
+(async () => {
+  const priceUrl = 'https://api.npoint.io/aa3ef5f1c41783fbce99';
+  const DEFAULT_PRICE = 27;
 
-  function render(){
-    const q = parseInt(qtyEl.value,10)||1;
-    totalEl.textContent = new Intl.NumberFormat('ro-RO').format(q*price);
+  const totalEl = document.getElementById('total_price');
+  const qtyEl = document.getElementById('quantity');
+  let pricePerBag = DEFAULT_PRICE;
+
+  function updateTotal() {
+    const qty = parseInt(qtyEl.value, 10) || 1;
+    const total = pricePerBag * qty;
+    totalEl.textContent = new Intl.NumberFormat('ro-RO').format(total);
   }
 
-  qtyEl.addEventListener('input', render);
-  render(); // initial
+  function setPrice(val) {
+    const n = Number(val);
+    pricePerBag = Number.isFinite(n) && n > 0 ? n : DEFAULT_PRICE;
+    localStorage.setItem('priceRON', String(pricePerBag));
+    updateTotal();
+  }
 
-  (async()=>{
-    try{
-      const r=await fetch(url,{cache:'no-store'});
-      const t=(await r.text()).trim();
-      const n=parseFloat(t.replace(',', '.'));
-      if(isFinite(n)&&n>0){ price=n; localStorage.setItem('priceRON', String(n)); render(); }
-    }catch{/* ignore, keep cached/default */}
-  })();
+  async function fetchPrice() {
+    try {
+      // simple timeout so we don't hang forever
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 4000);
+
+      const res = await fetch(priceUrl, { cache: 'no-store', signal: ctrl.signal });
+      clearTimeout(t);
+
+      const data = await res.json();
+      const val = (typeof data === 'number') ? data : (data.priceRON ?? data.price ?? data.value);
+      setPrice(val);
+    } catch (err) {
+      // use last good value or fallback to 27
+      const cached = Number(localStorage.getItem('priceRON'));
+      pricePerBag = Number.isFinite(cached) && cached > 0 ? cached : DEFAULT_PRICE;
+      updateTotal();
+      console.warn('Price API unavailable, using cached/default:', pricePerBag);
+    }
+  }
+
+  qtyEl.addEventListener('input', updateTotal);
+  await fetchPrice();
 })();
 </script>
 
