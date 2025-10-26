@@ -169,7 +169,7 @@
         </div>
 
         <div class="mb-3">
-            <p>Pret total: <span id="total_price">27</span> RON</p>
+            <p>Pret total: <span id="total_price">nn</span> RON</p>
         </div>
         
         <div class="mb-3">
@@ -184,12 +184,35 @@
     </form>
 </div>
 
-    <script>
-    document.getElementById('quantity').addEventListener('input', function() {
-        var quantity = this.value;
-        var totalPrice = quantity * 20;
-        document.getElementById('total_price').innerText = totalPrice;
-    });
+    <!-- calculate total price dynamically -->
+<script>
+(async () => {
+  const priceUrl = 'https://api.npoint.io/aa3ef5f1c41783fbce99/priceRON';
+  const totalEl = document.getElementById('total_price');
+  const qtyEl = document.getElementById('quantity');
+  let pricePerBag = 0;
+
+  async function fetchPrice() {
+    try {
+      const res = await fetch(priceUrl, { cache: 'no-store' });
+      const data = await res.json();
+      pricePerBag = data.priceRON || 0;
+      updateTotal();
+    } catch (err) {
+      console.error('Could not fetch price:', err);
+      totalEl.textContent = 'N/A';
+    }
+  }
+
+  function updateTotal() {
+    const qty = parseInt(qtyEl.value, 10) || 1;
+    const total = pricePerBag * qty;
+    totalEl.textContent = new Intl.NumberFormat('ro-RO').format(total);
+  }
+
+  qtyEl.addEventListener('input', updateTotal);
+  await fetchPrice();
+})();
 </script>
 
 <script type="text/javascript">
