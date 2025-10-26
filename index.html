@@ -108,7 +108,9 @@
                             <div class="col-12 col-lg-8 text-center">
                                 <h1 class="display-3 text-white animated slideInDown mb-4">Peleți de calitate Craiova</h1>
                                 <p class="fs-5 fw-medium text-white mb-4 pb-2">Furnizorul dumneavoastră de încredere pentru soluții eficiente de încălzire.</p>
-                                <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Doar 27 RON Sacul 15kg</a>
+                                <a href="" id="ctaPriceBtn" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">
+                                  Doar <span id="price_bag">—</span> RON Sacul 15kg
+                                </a>
                                 <a href="tel:+40784715181" class="btn btn-light py-md-3 px-md-5 animated slideInRight">0784715181</a>
                             </div>
                         </div>
@@ -622,7 +624,43 @@
 
     <!-- Back to Top -->
     <a href="/" class="btn btn-lg btn-primary btn-lg-square rounded-0 back-to-top" aria-label="Înapoi la începutul paginii"><i class="bi bi-arrow-up"></i></a>
+<script>
+(function () {
+  const priceUrl = 'https://api.npoint.io/aa3ef5f1c41783fbce99';
+  const DEFAULT_PRICE = 27;
 
+  const priceEl = document.getElementById('price_bag');
+
+  function setPrice(val) {
+    const n = Number(val);
+    const price = (Number.isFinite(n) && n > 0) ? n : DEFAULT_PRICE;
+    priceEl.textContent = new Intl.NumberFormat('ro-RO').format(price);
+    localStorage.setItem('priceRON', String(price));
+  }
+
+  async function loadPrice() {
+    try {
+      const ctrl = new AbortController();
+      const to = setTimeout(() => ctrl.abort(), 4000);
+      const res = await fetch(priceUrl, { cache: 'no-store', signal: ctrl.signal });
+      clearTimeout(to);
+      const data = await res.json();
+      const val = (typeof data === 'number') ? data : (data.priceRON ?? data.price ?? data.value);
+      setPrice(val);
+    } catch (e) {
+      // fallback to last cached or default
+      const cached = Number(localStorage.getItem('priceRON'));
+      setPrice(Number.isFinite(cached) && cached > 0 ? cached : DEFAULT_PRICE);
+      console.warn('Price API unavailable on index, using cached/default.');
+    }
+  }
+
+  // show something immediately (cached/default), then try API
+  const cached = Number(localStorage.getItem('priceRON'));
+  setPrice(Number.isFinite(cached) && cached > 0 ? cached : DEFAULT_PRICE);
+  loadPrice();
+})();
+</script>
 
     <!-- JavaScript Libraries -->
     <script src="lib/jquery-3.4.1.min.js"></script>
