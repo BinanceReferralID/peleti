@@ -626,39 +626,25 @@
     <a href="/" class="btn btn-lg btn-primary btn-lg-square rounded-0 back-to-top" aria-label="Înapoi la începutul paginii"><i class="bi bi-arrow-up"></i></a>
 <script>
 (function () {
-  const priceUrl = 'https://api.npoint.io/aa3ef5f1c41783fbce99';
-  const DEFAULT_PRICE = 27;
+  const url = 'https://api.npoint.io/aa3ef5f1c41783fbce99';
+  const DEFAULT = 27;
+  const el = document.getElementById('price_bag');
 
-  const priceEl = document.getElementById('price_bag');
-
-  function setPrice(val) {
-    const n = Number(val);
-    const price = (Number.isFinite(n) && n > 0) ? n : DEFAULT_PRICE;
-    priceEl.textContent = new Intl.NumberFormat('ro-RO').format(price);
-    localStorage.setItem('priceRON', String(price));
+  function setPrice(n){ const p=(isFinite(n)&&n>0)?n:DEFAULT;
+    el.textContent = new Intl.NumberFormat('ro-RO').format(p);
+    localStorage.setItem('priceRON', String(p));
   }
 
-  async function loadPrice() {
+  // show cached/default immediately
+  setPrice(+localStorage.getItem('priceRON'));
+
+  (async () => {
     try {
-      const ctrl = new AbortController();
-      const to = setTimeout(() => ctrl.abort(), 4000);
-      const res = await fetch(priceUrl, { cache: 'no-store', signal: ctrl.signal });
-      clearTimeout(to);
-      const data = await res.json();
-      const val = (typeof data === 'number') ? data : (data.priceRON ?? data.price ?? data.value);
-      setPrice(val);
-    } catch (e) {
-      // fallback to last cached or default
-      const cached = Number(localStorage.getItem('priceRON'));
-      setPrice(Number.isFinite(cached) && cached > 0 ? cached : DEFAULT_PRICE);
-      console.warn('Price API unavailable on index, using cached/default.');
-    }
-  }
-
-  // show something immediately (cached/default), then try API
-  const cached = Number(localStorage.getItem('priceRON'));
-  setPrice(Number.isFinite(cached) && cached > 0 ? cached : DEFAULT_PRICE);
-  loadPrice();
+      const r = await fetch(url, {cache:'no-store'});
+      const t = (await r.text()).trim();
+      setPrice(parseFloat(t.replace(',', '.')));
+    } catch { /* keep cached/default */ }
+  })();
 })();
 </script>
 
